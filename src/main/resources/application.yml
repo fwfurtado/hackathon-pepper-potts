@@ -1,0 +1,9 @@
+spring:
+  mvc:
+    date-pattern: yyyy-MM-dd
+
+
+pepper-potts:
+  allocator:
+    configurationFile: allocate-configuration.xml
+    rule-file: allocate-rules.drl

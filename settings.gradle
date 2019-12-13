@@ -1,0 +1,9 @@
+pluginManagement {
+    repositories {
+        gradlePluginPortal()
+    }
+}
+rootProject.name = 'pepper-potts'
+include 'shared'
+include 'allocator'
+

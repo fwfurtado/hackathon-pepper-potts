@@ -1,0 +1,37 @@
+import org.optaplanner.core.api.score.buildin.hardsoft.HardSoftScoreHolder;
+import br.com.caelum.pepperpotts.domain.*;
+
+global HardSoftScoreHolder scoreHolder;
+
+rule "Cannot allocate more task than your total of time-boxes"
+  when
+    $task: Task()
+    Number($totalAllocate: intValue != $task.totalOfTimeBoxes) from accumulate(TimeBox(task == $task), sum(1))
+  then
+    scoreHolder.addSoftConstraintMatch(kcontext, Math.abs($totalAllocate - $task.getTotalOfTimeBoxes().intValue()) * -20);
+end
+
+rule "foca"
+  when
+    $task: Task( dueDate != null)
+    Number($totalAllocate: intValue < $task.totalOfTimeBoxes) from accumulate(TimeBox(task == $task), sum(1))
+  then
+    scoreHolder.addHardConstraintMatch(kcontext, Math.abs($totalAllocate - $task.getTotalOfTimeBoxes().intValue()) * -10);
+end
+
+rule "Cannot allocate task with low priority before tasks with high priority"
+  when
+    $currentTimeBox: TimeBox(task != null, task.date == null, task.dueDate == null)
+
+    TimeBox(task != null, this != $currentTimeBox, task.date == null, task.dueDate == null, dateTime.isAfter($currentTimeBox.dateTime), task.priority.value < $currentTimeBox.task.priority.value)
+  then
+    scoreHolder.addSoftConstraintMatch(kcontext, -10);
+ end
+
+ rule "Cannot allocate task after due date"
+  when
+    TimeBox(task != null, task.dueDate != null, dateTime.isAfter(task.dueDate))
+  then
+    scoreHolder.addHardConstraintMatch(kcontext, -10);
+  end
+

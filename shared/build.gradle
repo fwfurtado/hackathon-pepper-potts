@@ -1,0 +1,3 @@
+dependencies {
+    compileClasspath "org.optaplanner:optaplanner-core:${optaplannerVersion}"
+}

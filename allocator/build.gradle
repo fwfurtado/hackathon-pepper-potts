@@ -1,0 +1,5 @@
+dependencies {
+    implementation "org.springframework.boot:spring-boot-starter"
+    compileClasspath project(":shared")
+    compileClasspath "org.optaplanner:optaplanner-core:${optaplannerVersion}"
+}
